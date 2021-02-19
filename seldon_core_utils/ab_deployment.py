@@ -43,7 +43,7 @@ def ab_deployment(
         json=json.loads(body),
         headers=headers,
         verify=False,
-        timeout=2
+        timeout=30
     )
 
 
@@ -57,5 +57,5 @@ def ab_undeployment(name, namespace):
         url=url+endpoint,
         headers=headers,
         verify=False,
-        timeout=2
+        timeout=30
     )
