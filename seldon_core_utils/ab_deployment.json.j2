@@ -1,0 +1,103 @@
+{
+  "apiVersion": "machinelearning.seldon.io/v1alpha2",
+  "kind": "SeldonDeployment",
+  "metadata": {
+    "name": "{{ name }}",
+    "namespace": "{{ namespace }}"
+  },
+  "spec": {
+    "name": "{{ name }}",
+    "predictors": [
+      {
+        "componentSpecs": [
+          {
+            "spec": {
+              "containers": [
+                {
+                  "name": "{{ name }}",
+                  "livenessProbe": {
+                    "failureThreshold": 200,
+                    "httpGet": {
+                      "path": "/health/ping",
+                      "port": "http",
+                      "scheme": "HTTP"
+                    },
+                    "initialDelaySeconds": 80,
+                    "periodSeconds": 5,
+                    "successThreshold": 1
+                  },
+                  "readinessProbe": {
+                    "failureThreshold": 200,
+                    "httpGet": {
+                      "path": "/health/ping",
+                      "port": "http",
+                      "scheme": "HTTP"
+                    },
+                    "initialDelaySeconds": 80,
+                    "periodSeconds": 5,
+                    "successThreshold": 1
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "graph": {
+          "children": [],
+          "envSecretRefName": "{{ secret_name }}",
+          "implementation": "MLFLOW_SERVER",
+          "modelUri": "{{ model_a_artifact_uri }}",
+          "name": "{{ name }}"
+        },
+        "name": "{{ model_a_name }}",
+        "replicas": 1,
+        "traffic": {{ model_a_traffic }}
+      },
+      {
+        "componentSpecs": [
+          {
+            "spec": {
+              "containers": [
+                {
+                  "name": "{{ name }}",
+                  "livenessProbe": {
+                    "failureThreshold": 200,
+                    "httpGet": {
+                      "path": "/health/ping",
+                      "port": "http",
+                      "scheme": "HTTP"
+                    },
+                    "initialDelaySeconds": 80,
+                    "periodSeconds": 5,
+                    "successThreshold": 1
+                  },
+                  "readinessProbe": {
+                    "failureThreshold": 200,
+                    "httpGet": {
+                      "path": "/health/ping",
+                      "port": "http",
+                      "scheme": "HTTP"
+                    },
+                    "initialDelaySeconds": 80,
+                    "periodSeconds": 5,
+                    "successThreshold": 1
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "graph": {
+          "children": [],
+          "envSecretRefName": "{{ secret_name }}",
+          "implementation": "MLFLOW_SERVER",
+          "modelUri": "{{ model_b_artifact_uri }}",
+          "name": "{{ name }}"
+        },
+        "name": "{{ model_b_name }}",
+        "replicas": 1,
+        "traffic": {{ 100 - model_a_traffic }}
+      }
+    ]
+  }
+}
